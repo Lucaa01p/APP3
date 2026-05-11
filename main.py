@@ -3,7 +3,8 @@ from parcours import bfs, dfs, verifier_connexite
 from dijkstra import dijkstra, afficher_itineraire
 
 
-def choisir_ville():
+def choisir_ville():    # Retourne le dictionnaire des données chargées et le nom de la ville choisie
+    
     villes = lister_villes()
     noms = list(villes.keys())
 
@@ -31,7 +32,7 @@ def saisir_station(message, stations):
             if s.lower() == saisie.lower():
                 return s
 
-        # Sinon on cherche les stations qui contiennent ce mot
+        # Si aucune correspondance exacte on recherche par mots-clés 
         suggestions = sorted(s for s in stations if saisie.lower() in s.lower())
         if len(suggestions) == 1:
             print(f"  -> {suggestions[0]}")
@@ -52,9 +53,9 @@ def main():
     print("  CALCULATEUR D'ITINÉRAIRE - TRANSPORTS EN COMMUN")
     print("=" * 50)
 
-    donnees = None
-    graphe  = None
-    ville   = None
+    donnees = None # Contient la structure JSON/Dictionnaire brute
+    graphe  = None # Contient l'objet graphe (Adjacence) pour les calculs
+    ville   = None # Nom de la ville sélectionnée
 
     while True:
         print("\n  1. Choisir une ville")
@@ -79,18 +80,20 @@ def main():
         elif choix == "2" and donnees:
             stations = toutes_stations(donnees)
             dep = saisir_station("Station de départ  : ", stations)
+            
             arr = saisir_station("Station d'arrivée  : ", stations)
 
             if dep == arr:
                 print("Départ et arrivée identiques !")
                 continue
-
+# Calcul du plus court chemin en utilisant le poids des arêtes
             temps, chemin = dijkstra(graphe, dep, arr)
             if chemin is None:
                 print("Aucun itinéraire trouvé.")
             else:
                 afficher_itineraire(chemin, temps)
-
+# Vérification de la structure du réseau par parcours en largeur (BFS) et profondeur (DFS)
+            # Permet de détecter si toutes les stations sont accessibles entre elles
         elif choix == "3" and donnees:
             premiere = list(donnees["lignes"].values())[0]["stations"][0]
             print(f"\nBFS depuis '{premiere}' :")
