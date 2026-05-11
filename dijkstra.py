@@ -18,9 +18,9 @@ def dijkstra(graphe, depart, arrivee):
     file = []
     for n in noeuds_dep:
         distances[n] = 0
-        heapq.heappush(file, (0, n))
+        heapq.heappush(file, (0, n)) # c'est un append qui trie la liste (croissant) 
 
-    visites = set()
+    visites = set()  #créer un un ensemble de valeurs uniques avec des {}
 
     while len(file) > 0:
         dist, noeud = heapq.heappop(file)
